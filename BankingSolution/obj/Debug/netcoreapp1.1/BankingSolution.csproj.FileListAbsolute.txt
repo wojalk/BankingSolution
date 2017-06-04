@@ -1,0 +1,10 @@
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\bin\Debug\netcoreapp1.1\BankingSolution.deps.json
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\bin\Debug\netcoreapp1.1\BankingSolution.runtimeconfig.json
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\bin\Debug\netcoreapp1.1\BankingSolution.runtimeconfig.dev.json
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\obj\Debug\netcoreapp1.1\BankingSolution.csprojResolveAssemblyReference.cache
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\obj\Debug\netcoreapp1.1\BankingSolution.AssemblyInfo.cs
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\bin\Debug\netcoreapp1.1\BankingSolution.dll
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\bin\Debug\netcoreapp1.1\BankingSolution.pdb
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\obj\Debug\netcoreapp1.1\BankingSolution.dll
+c:\users\wojal\documents\visual studio 2017\Projects\BankingSolution\BankingSolution\obj\Debug\netcoreapp1.1\BankingSolution.pdb
