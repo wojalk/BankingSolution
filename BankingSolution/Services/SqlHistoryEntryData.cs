@@ -26,9 +26,9 @@ namespace BankingSolution.Services
             return _context.HistoryEntries.FirstOrDefault(r => r.Id == id);
         }
 
-        public IEnumerable<HistoryEntry> GetAllForAccount(int bankAccountId)
+        public IEnumerable<HistoryEntry> GetAllForAccount(string bankAccount)
         {
-            return _context.HistoryEntries.Where(x => x.PerformedByUser == bankAccountId);
+            return _context.HistoryEntries.Where(x =>  x.TargetAccountNumber == bankAccount || x.PerformedBy == bankAccount);
         }
 
         public HistoryEntry Add(HistoryEntry historyEntry)

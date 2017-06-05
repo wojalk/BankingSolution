@@ -17,7 +17,6 @@ namespace BankingSolution.Entities
 
         public string AccountOwnerId { get; set; }
         public BankAccountType? BankAccountType { get; set; }
-        public ICollection<HistoryEntry> HistoryEntries { get; set; }
 
         public string AccountNumber { get; set; }
         public double AccountBalance { get; set; }

@@ -1,0 +1,25 @@
+﻿@model ListBankAccountViewModel
+
+<div class="container">
+    <h4>Your Accounts:</h4>
+    <table class="table fadeIn animated" asp-controller="BankAccount" asp-action="List" method="get">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Balance</th>
+                <th>History</th>
+                <th>Transfer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BankAccount ba in Model.bankAccounts) {
+                <tr>
+                    <td>@ba.AccountNumber</td>
+                    <td>@ba.AccountBalance</td>
+                    <td><a href="/BankAccount/History/@ba.Id">History</a></td>
+                    <td><a href="/BankAccount/Transfer/@ba.Id">Transfer</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

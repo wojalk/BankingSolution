@@ -8,8 +8,8 @@ using BankingSolution.Data;
 namespace BankingSolution.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170528161305_0.1")]
-    partial class _01
+    [Migration("20170604222530_0.3")]
+    partial class _03
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -100,15 +100,15 @@ namespace BankingSolution.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BankAccountId");
+                    b.Property<double>("AmountTransferred");
 
-                    b.Property<DateTime?>("Date");
+                    b.Property<DateTime>("Date");
 
-                    b.Property<int>("PerformedByUser");
+                    b.Property<string>("PerformedBy");
+
+                    b.Property<string>("TargetAccountNumber");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BankAccountId");
 
                     b.ToTable("HistoryEntries");
                 });
@@ -218,13 +218,6 @@ namespace BankingSolution.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("BankingSolution.Entities.HistoryEntry", b =>
-                {
-                    b.HasOne("BankingSolution.Entities.BankAccount")
-                        .WithMany("HistoryEntries")
-                        .HasForeignKey("BankAccountId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

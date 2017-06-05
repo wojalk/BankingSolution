@@ -43,9 +43,9 @@ namespace BankingSolution
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<SqlBankAccountData, SqlBankAccountData>();
             services.AddScoped<SqlHistoryEntryData, SqlHistoryEntryData>();
-            
+            services.AddScoped<SqlBankAccountData, SqlBankAccountData>();
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

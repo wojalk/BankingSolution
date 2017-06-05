@@ -9,10 +9,10 @@ namespace BankingSolution.Entities
     {
         public int Id { get; set; }
 
-        public double AmountTransferred;
+        public double AmountTransferred { get; set; }
 
-        public DateTime? Date { get; set; }
-        public int PerformedByUser { get; set; }
-        public string TargetAccountNumber;
+        public DateTime Date { get; set; }
+        public string PerformedBy { get; set; }
+        public string TargetAccountNumber { get; set; }
     }
 }

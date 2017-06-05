@@ -1,0 +1,26 @@
+﻿@model HistoryBankAccountViewModel
+
+<div class="container">
+    <h4>Account History</h4>
+    <table class="table fadeIn animated" asp-controller="BankAccount" asp-action="History" method="get">
+        <thead>
+            <tr>
+                <th>Account Number from</th>
+                <th>Account Number to</th>
+                <th>Date</th/>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (HistoryEntry ba in Model.HistoryEntries)
+            {
+                <tr>
+                    <td>@ba.PerformedBy</td>
+                    <td>@ba.TargetAccountNumber</td>
+                    <td>@ba.Date</td>
+                    <td>@ba.AmountTransferred</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

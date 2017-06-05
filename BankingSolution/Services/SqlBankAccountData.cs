@@ -26,6 +26,11 @@ namespace BankingSolution.Services
             return _context.BankAccounts.FirstOrDefault(r => r.Id == id);
         }
 
+        public IEnumerable<BankAccount> GetForUser(string Id)
+        {
+            return _context.BankAccounts.Where(r => r.AccountOwnerId == Id);
+        }
+
         public BankAccount Add(BankAccount bankAccount)
         {
             _context.Add(bankAccount);

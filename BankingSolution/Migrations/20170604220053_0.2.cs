@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace BankingSolution.Migrations
 {
-    public partial class _01 : Migration
+    public partial class _02 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,6 +53,22 @@ namespace BankingSolution.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BankAccounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HistoryEntries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AmountTransferred = table.Column<double>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: true),
+                    PerformedBy = table.Column<string>(nullable: true),
+                    TargetAccountNumber = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HistoryEntries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,27 +141,6 @@ namespace BankingSolution.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HistoryEntries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BankAccountId = table.Column<int>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: true),
-                    PerformedByUser = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HistoryEntries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_HistoryEntries_BankAccounts_BankAccountId",
-                        column: x => x.BankAccountId,
-                        principalTable: "BankAccounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -202,11 +197,6 @@ namespace BankingSolution.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_HistoryEntries_BankAccountId",
-                table: "HistoryEntries",
-                column: "BankAccountId");
-
-            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
@@ -236,6 +226,9 @@ namespace BankingSolution.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BankAccounts");
+
+            migrationBuilder.DropTable(
                 name: "HistoryEntries");
 
             migrationBuilder.DropTable(
@@ -252,9 +245,6 @@ namespace BankingSolution.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "BankAccounts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BankingSolution.ViewModels.BankAccountViewModels
 {
-    public class RegisterBankAccountViewModel
+    public class HistoryBankAccountViewModel
     {
-        public double DailyLimit { get; set; }
-        public double MonthlyLimit { get; set; }
+        public IEnumerable<HistoryEntry> HistoryEntries { get; set; }
     }
 }

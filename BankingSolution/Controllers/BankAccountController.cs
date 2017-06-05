@@ -1,5 +1,4 @@
 ﻿using BankingSolution.Entities;
-using BankingSolution.ViewModels.BankAccountViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,14 +9,17 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using BankingSolution.Data;
 using BankingSolution.Services;
+using BankingSolution.ViewModels.BankAccountViewModels;
 
 namespace BankingSolution.Controllers
 {
+    [Authorize]
     public class BankAccountController : Controller
     {
-
         private readonly UserManager<ApplicationUser> _userManager;
-        private SqlBankAccountData _data;
+        private ApplicationDbContext _context;
+        private SqlBankAccountData _bankAccountData;
+        private SqlHistoryEntryData _historyEntryData;
         public object RandomString { get; private set; }
 
         public IActionResult Index()
@@ -25,10 +27,15 @@ namespace BankingSolution.Controllers
             return View();
         }
 
-        public BankAccountController(UserManager<ApplicationUser> manager, SqlBankAccountData data)
+        public BankAccountController(UserManager<ApplicationUser> manager,
+            ApplicationDbContext context,
+            SqlBankAccountData bankAccountData,
+            SqlHistoryEntryData historyEntryData)
         {
             _userManager = manager;
-            _data = data;
+            _bankAccountData = bankAccountData;
+            _historyEntryData = historyEntryData;
+            _context = context;
         }
 
         internal static string GenerateRandomString(int length)
@@ -47,26 +54,31 @@ namespace BankingSolution.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterBankAccountViewModel model, string returnUrl)
+        public async Task<IActionResult> Register(RegisterBankAccountViewModel model, string returnUrl="/BankAccount/List")
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-                ApplicationUser appUser = await GetCurrentUserAsync();
                 var bankAccount = new BankAccount {
                     AccountNumber = GenerateRandomString(20),
                     DailyLimit = model.DailyLimit,
                     MonthlyLimit = model.MonthlyLimit,
                     AccountBalance = 0,
                     BankAccountType = BankAccountType.Bronze,
-                    AccountOwnerId = appUser.Id
+                    AccountOwnerId = _userManager.GetUserId(User)
                 };
 
-                _data.Add(bankAccount);
+                _bankAccountData.Add(bankAccount);
                 
                 return RedirectToLocal(returnUrl);
             }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult List(ListBankAccountViewModel model, string returnUrl)
+        {
+            model.bankAccounts = _bankAccountData.GetForUser(_userManager.GetUserId(User));
             return View(model);
         }
 
@@ -80,6 +92,65 @@ namespace BankingSolution.Controllers
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
+        }
+
+
+        [HttpGet]
+        public IActionResult Transfer(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Transfer(TransferBankAccountViewModel model, string returnUrl="/BankAccount/List")
+        {
+            int id = int.Parse(Request.Path.ToUriComponent().Split('/').Last());
+            string recipientAccountNumber = model.AccountNumber;
+            double AmountTransferred = model.Amount;
+
+
+
+            if (ModelState.IsValid)
+            {
+                BankAccount from = _bankAccountData.Get(id);
+                BankAccount recipient = _bankAccountData.GetAll().Where(r => r.AccountNumber.Equals(model.AccountNumber)).FirstOrDefault();
+
+                if (from.AccountBalance > AmountTransferred || recipient!= null)
+                {
+                    from.AccountBalance -= AmountTransferred;
+                    recipient.AccountBalance += AmountTransferred;
+
+                    HistoryEntry historyEntry = new HistoryEntry() {
+                        AmountTransferred = model.Amount,
+                        Date = DateTime.Now,
+                        PerformedBy = from.AccountNumber,
+                        TargetAccountNumber = model.AccountNumber
+                    };
+
+                    _historyEntryData.Add(historyEntry);
+
+                    _context.Entry(from).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    _context.Entry(recipient).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    _context.SaveChanges();
+
+                    return RedirectToLocal(returnUrl);
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult History(HistoryBankAccountViewModel model, string returnUrl)
+        {
+            int id = int.Parse(Request.Path.ToUriComponent().Split('/').Last());
+            BankAccount bankAccount = _bankAccountData.Get(id);
+
+            //IEnumerable<HistoryEntry> historyEntries = _historyEntryData.GetAllForAccount(bankAccount.AccountNumber);
+            model.HistoryEntries = _historyEntryData.GetAllForAccount(bankAccount.AccountNumber).ToList();
+
+            return View(model);
         }
     }
 }
